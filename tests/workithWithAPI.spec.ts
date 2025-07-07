@@ -62,18 +62,19 @@ test('Delete Article', async({ page, request }) => {
   // This test will involve signing in, creating, then deleting an article
   // It will have to use real APIs instead of mocks to work
   // To make an API call in playwright, we use <await request> and request will need to be imported from PW and we'll need to add the request fixture to the test options
-  const response = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
-    // Next we add an object to get a username and password to submit to the login, calling it data
-    data: {
-      // We need to get the entire Request Payload from the DOM
-      user: {email: "test+hunter002@test.com", password: "P@sswrd2@"}
-    }
-  })
-  
-  // After the request is performed, we need the result and to process the response body
-  const responseBody = await response.json()
-  const accessToken = responseBody.user.token
-  console.log(responseBody.user.token)
+  // const response = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
+  //   // Next we add an object to get a username and password to submit to the login, calling it data
+  //   data: {
+  //     // We need to get the entire Request Payload from the DOM
+  //     user: {email: "test+hunter002@test.com", password: "P@sswrd2@"}
+  //   }
+  // })
+  // 
+  // // After the request is performed, we need the result and to process the response body
+  // const responseBody = await response.json()
+  // const accessToken = responseBody.user.token
+  // console.log(responseBody.user.token) // this section is being handled through auth.setup.ts
+
   // Now that we have our user object, we need to get the user object and read the token value
   // We add on to the log call to do this. After we run this setup, we can add a new variable with this token value after the first const
 
@@ -84,9 +85,9 @@ test('Delete Article', async({ page, request }) => {
     data: {
       "article":{"title":"This is a new article test","description":"Please delete","body":"Delete me","tagList":[]}
     },
-    headers: {
-      Authorization: `Token ${accessToken}`
-    }
+    // headers: {
+    //   Authorization: `Token ${accessToken}`
+    // }
   })
   expect(articleResponse.status()).toEqual(201)
   
@@ -117,19 +118,15 @@ test('Create Article', async({ page, request }) => {
 
   await expect(page.locator('app-article-list h1').first()).toContainText('Playwright is awesome')
 
-  const response = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
-    data: {
-      user: {email: "test+hunter002@test.com", password: "P@sswrd2@"}
-    }
-  })
-  const responseBody = await response.json()
-  const accessToken = responseBody.user.token
+  // const response = await request.post('https://conduit-api.bondaracademy.com/api/users/login', {
+  //   data: {
+  //     user: {email: "test+hunter002@test.com", password: "P@sswrd2@"}
+  //   }
+  // })
+  // const responseBody = await response.json()
+  // const accessToken = responseBody.user.token // this section is being handled through auth.setup.ts
 
-  const deleteArticleResponse = await request.delete(`https://conduit-api.bondaracademy.com/api/articles/${slugID}`, {
-    headers: {
-      Authorization: `Token ${accessToken}`
-    }
-  })
+  const deleteArticleResponse = await request.delete(`https://conduit-api.bondaracademy.com/api/articles/${slugID}`)
   expect(deleteArticleResponse.status()).toEqual(204)
   await page.getByText('Global Feed').click()
 })
