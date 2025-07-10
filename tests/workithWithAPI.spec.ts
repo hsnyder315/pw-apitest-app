@@ -128,5 +128,4 @@ test('Create Article', async({ page, request }) => {
 
   const deleteArticleResponse = await request.delete(`https://conduit-api.bondaracademy.com/api/articles/${slugID}`)
   expect(deleteArticleResponse.status()).toEqual(204)
-  await page.getByText('Global Feed').click()
 })
